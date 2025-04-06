@@ -1,0 +1,59 @@
+package vn.rmit.cosc2469;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import java.util.Arrays;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+class RMIT_Sudoku_SolverTest {
+
+    RMIT_Sudoku_Solver solver;
+
+    @BeforeEach
+    void setUp() {
+        solver = new RMIT_Sudoku_Solver();
+    }
+
+    @AfterEach
+    void tearDown() {
+        solver = null;
+    }
+
+    @Test
+    void solve() {
+        int[][] puzzle = {
+                {0, 2, 6, 0, 0, 0, 9, 0, 1},
+                {6, 8, 0, 0, 7, 0, 0, 4, 3},
+                {1, 9, 0, 0, 0, 4, 5, 0, 0},
+                {8, 2, 0, 1, 0, 0, 0, 0, 0},
+                {0, 0, 4, 6, 0, 2, 9, 0, 0},
+                {0, 0, 0, 0, 0, 9, 0, 1, 8},
+                {0, 0, 9, 3, 0, 0, 0, 6, 4},
+                {2, 6, 0, 0, 0, 0, 0, 0, 0},
+                {7, 0, 3, 0, 0, 0, 0, 0, 0}
+        };
+        int[][] expected = {
+                {4, 3, 5, 2, 6, 9, 7, 8, 1},
+                {6, 8, 2, 5, 7, 1, 4, 9, 3},
+                {1, 9, 7, 8, 3, 4, 5, 6, 2},
+                {8, 2, 6, 1, 9, 5, 3, 4, 7},
+                {3, 7, 4, 6, 8, 2, 9, 1, 5},
+                {9, 5, 1, 7, 4, 3, 6, 2, 8},
+                {5, 1, 9, 3, 2, 6, 8, 7, 4},
+                {2, 4, 8, 9, 5, 7, 1, 3, 6},
+                {7, 6, 3, 4, 1, 8, 2, 5, 9}
+        };
+
+        int[][] result = solver.solve(puzzle);
+
+        // Print the result for debugging
+        System.out.println("Solved Puzzle:");
+        for (int[] row : result) {
+            System.out.println(Arrays.toString(row));
+        }
+        assertArrayEquals(expected, result);
+    }
+}
