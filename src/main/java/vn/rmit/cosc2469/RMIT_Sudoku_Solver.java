@@ -2,6 +2,8 @@ package vn.rmit.cosc2469;
 
 import java.util.*;
 
+import static java.util.Collections.swap;
+
 /**
  * A Sudoku solver that applies local search heuristics combined with a tabu search strategy
  * to solve standard 9x9 Sudoku puzzles. The solver uses:
@@ -76,58 +78,123 @@ public class RMIT_Sudoku_Solver {
         int[][] current = new int[SIZE][SIZE];
 
         // Step 1: Preprocess with AllDifferent (initialize rows with all 1–9 without repetition)
-        // TODO: fine-tune, check row and col
         for (int row = 0; row < SIZE; row++) {
-            List<Integer> available = new ArrayList<>();        // available numbers for this row
-            for (int i = 1; i <= SIZE; i++) available.add(i);   // add 1 to 9
+            List<Integer> available = new ArrayList<>();
 
+            // create a list of numbers 1 to SIZE for the current row
+            for (int i = 1; i <= SIZE; i++) available.add(i);
+
+            // copy values from the puzzle to the current solution
+            // then mark fixed positions while removing them from available numbers
             for (int col = 0; col < SIZE; col++) {
-                current[row][col] = puzzle[row][col];           // copy original puzzle value
-                if (puzzle[row][col] != 0) {                    // if cell is pre-filled
-                    fixed[row][col] = true;                     // mark as fixed
-                    available.remove((Integer) puzzle[row][col]);   // remove value from availability
+                current[row][col] = puzzle[row][col];
+                if (puzzle[row][col] != 0) {
+                    fixed[row][col] = true;     // mark as fixed
+                    available.remove((Integer) puzzle[row][col]);       // remove fixed number
                 }
             }
 
+            // Fill the remaining cells randomly with available values
             for (int col = 0; col < SIZE; col++) {
                 if (!fixed[row][col]) {
-                    // fill empty cells randomly with remaining available numbers
                     current[row][col] = available.remove(random.nextInt(available.size()));
                 }
             }
+//            List<Integer> available = new ArrayList<>();        // available numbers for this row
+//            for (int i = 1; i <= SIZE; i++) available.add(i);   // add 1 to 9
+//
+//            for (int col = 0; col < SIZE; col++) {
+//                current[row][col] = puzzle[row][col];           // copy original puzzle value
+//                if (puzzle[row][col] != 0) {                    // if cell is pre-filled
+//                    fixed[row][col] = true;                     // mark as fixed
+//                    available.remove((Integer) puzzle[row][col]);   // remove value from availability
+//                }
+//            }
+//
+//            for (int col = 0; col < SIZE; col++) {
+//                if (!fixed[row][col]) {
+//                    // fill empty cells randomly with remaining available numbers
+//                    current[row][col] = available.remove(random.nextInt(available.size()));
+//                }
+//            }
+//            for (int col = 0; col < SIZE; col++) {
+//                if (!fixed[row][col]) {
+//                    List<Integer> available = new ArrayList<>();
+//
+//                    for (int i = 1; i <= SIZE; i++) {
+//                        if (isSafeToPlace(current, row, col, i)) {
+//                            available.add(i);
+//                        }
+//                    }
+//
+//                    // If no valid value found (rare), assign random value from 1-9
+//                    current[row][col] = available.isEmpty()
+//                            ? random.nextInt(9) + 1
+//                            : available.get(random.nextInt(available.size()));
+//                }
+//            }
         }
+
 
         int[][] best = deepCopy(current);               // store best solution found so far
         int bestCost = calculateConflicts(best);        // cost (number of conflicts) of current board
-        Set<String> tabuList = new LinkedHashSet<>();   // tabu list to avoid repeating bad moves
+
+
+//        Set<String> tabuList = new LinkedHashSet<>();   // tabu list to avoid repeating bad moves
+
+        // Tabu list with tenure
+        Map<String, Integer> tabuList = new HashMap<>();
+        int tabuTenure = 7; // move will be forbidden for 7 iterations
 
         // step 2: tabu search to improve solution
-        // TODO: fine tune
         for (int iter = 0; iter < MAX_ITERATIONS; iter++) {
             if (System.currentTimeMillis() - startTime > TIME_LIMIT_MS) {
-                throw new RuntimeException("Timeout: Couldn't solve puzzle within 2 minutes.");
+//                throw new RuntimeException("Timeout: Couldn't solve puzzle within 2 minutes.");
+                System.out.println("Timeout: Returning best attempt so far.");
+                return best;
             }
 
             if (bestCost == 0) break;   // puzzle is solved if no conflicts remain
 
+            // Decrease remaining tenure for each tabu move
+            List<String> expiredMoves = new ArrayList<>();
+            for (Map.Entry<String, Integer> entry : tabuList.entrySet()) {
+                int remaining = entry.getValue() - 1;
+                if (remaining <= 0) {
+                    expiredMoves.add(entry.getKey());       // collect expired moves to remove later
+                } else {
+                    tabuList.put(entry.getKey(), remaining);    // update remaining tenure
+                }
+            }
+            // remove expired tabu moves from the tabu list
+            for (String move : expiredMoves) {
+                tabuList.remove(move);
+            }
+
+            // track best solution in this iteration
             int[][] bestCandidate = null;
             int bestCandidateCost = Integer.MAX_VALUE;
             String bestMove = "";
 
-            // try swapping two non-fixed cells in each row to create candidate neighbors
+            // explore neighbors by swapping non-fixed values in the same row
             for (int row = 0; row < SIZE; row++) {
                 for (int col1 = 0; col1 < SIZE; col1++) {
                     for (int col2 = col1 + 1; col2 < SIZE; col2++) {
-                        if (fixed[row][col1] || fixed[row][col2]) continue; // skip fixed cells
+                        if (fixed[row][col1] || fixed[row][col2]) continue; // skip fixed
 
-                        int[][] candidate = deepCopy(current);      // copy current board
-                        swap(candidate[row], col1, col2);           // swap two cells
+                        // create a candiate solution by swapping two values in the row
+                        int[][] candidate = deepCopy(current);
+                        swap(candidate[row], col1, col2);
 
-                        String move = row + "-" + col1 + "<->" + col2;      // encode the move
-                        int cost = calculateConflicts(candidate);           // evaluate candidate
+                        // generate a move identifier (for use in tabu list)
+                        String move = row + "-" + col1 + "<->" + col2;
+                        int cost = calculateConflicts(candidate); // evaluate number of conflicts
 
-                        // only consider moves not in tabu list or better than current best
-                        if (!tabuList.contains(move) || cost < bestCost) {
+                        boolean isTabu = tabuList.containsKey(move); // check if move is tabu
+                        boolean isAspiration = cost < bestCost; // allow tabu if its better than the best so far
+
+                        // if move is not tabu
+                        if (!isTabu || isAspiration) {
                             if (cost < bestCandidateCost) {
                                 bestCandidate = candidate;
                                 bestCandidateCost = cost;
@@ -138,34 +205,84 @@ public class RMIT_Sudoku_Solver {
                 }
             }
 
-            // accept the best neighbor move
+            // apply best move found in this iteration
             if (bestCandidate != null) {
                 current = bestCandidate;
+                stepCount++; // Count the accepted move
+                // update best
                 if (bestCandidateCost <= bestCost) {
-                    best = deepCopy(bestCandidate);     // update best solution
+                    best = deepCopy(bestCandidate);
                     bestCost = bestCandidateCost;
-                    tabuList.add(bestMove);             // add to tabu list
-                    if (tabuList.size() > 500) {
-                        // maintain max tabu list size
-                        Iterator<String> it = tabuList.iterator();
-                        it.next();
-                        it.remove();
-                    }
                 }
+
+                // Add the selected move to the tabu list with its tenure
+                tabuList.put(bestMove, tabuTenure);
             }
-            stepCount++; // increment step count
         }
 
-        return best;        // return the best solution found
+//            int[][] bestCandidate = null;
+//            int bestCandidateCost = Integer.MAX_VALUE;
+//            String bestMove = "";
+//
+//            // try swapping two non-fixed cells in each row to create candidate neighbors
+//            for (int row = 0; row < SIZE; row++) {
+//                for (int col1 = 0; col1 < SIZE; col1++) {
+//                    for (int col2 = col1 + 1; col2 < SIZE; col2++) {
+//                        if (fixed[row][col1] || fixed[row][col2]) continue; // skip fixed cells
+//
+//                        int[][] candidate = deepCopy(current);      // copy current board
+//                        swap(candidate[row], col1, col2);           // swap two cells
+//
+//                        String move = row + "-" + col1 + "<->" + col2;      // encode the move
+//                        int cost = calculateConflicts(candidate);           // evaluate candidate
+//
+//                        // only consider moves not in tabu list or better than current best
+//                        if (!tabuList.contains(move) || cost < bestCost) {
+//                            if (cost < bestCandidateCost) {
+//                                bestCandidate = candidate;
+//                                bestCandidateCost = cost;
+//                                bestMove = move;
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//
+//            // accept the best neighbor move
+//            if (bestCandidate != null) {
+//                current = bestCandidate;
+//                if (bestCandidateCost <= bestCost) {
+//                    best = deepCopy(bestCandidate);     // update best solution
+//                    bestCost = bestCandidateCost;
+//                    tabuList.add(bestMove);             // add to tabu list
+//                    if (tabuList.size() > 500) {
+//                        // maintain max tabu list size
+//                        Iterator<String> it = tabuList.iterator();
+//                        it.next();
+//                        it.remove();
+//                    }
+//                }
+//            }
+//            stepCount++; // increment step count
+//        }
+//        return best;        // return the best solution found
+        return best;
     }
 
     /**
     * Deep copies a 2D array to avoid mutating original reference
      */
     private int[][] deepCopy(int[][] board) {
-        int[][] copy = new int[SIZE][SIZE];
-        for (int i = 0; i < SIZE; i++) copy[i] = board[i].clone(); // clone each row
-        return copy;
+//        int[][] copy = new int[SIZE][SIZE];
+//        for (int i = 0; i < SIZE; i++) copy[i] = board[i].clone(); // clone each row
+//        return copy;
+            int[][] copy = new int[board.length][board[0].length];
+            for (int i = 0; i < board.length; i++) {
+                for (int j = 0; j < board[0].length; j++) {
+                    copy[i][j] = board[i][j];
+                }
+            }
+            return copy;
     }
 
     /**
@@ -232,6 +349,27 @@ public class RMIT_Sudoku_Solver {
         }
         return sb.toString();
     }
+
+    private boolean isSafeToPlace(int[][] board, int row, int col, int num) {
+        // Check row and column
+        for (int i = 0; i < SIZE; i++) {
+            if (board[row][i] == num || board[i][col] == num)
+                return false;
+        }
+
+        // Check 3x3 subgrid
+        int startRow = (row / 3) * 3;
+        int startCol = (col / 3) * 3;
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (board[startRow + i][startCol + j] == num)
+                    return false;
+            }
+        }
+
+        return true;
+    }
+
 
 
 }
