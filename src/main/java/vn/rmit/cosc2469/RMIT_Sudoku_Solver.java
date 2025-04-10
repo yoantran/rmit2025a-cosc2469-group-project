@@ -23,6 +23,7 @@ public class RMIT_Sudoku_Solver {
     private static final int MAX_ITERATIONS = 10000;
     private static final int TIME_LIMIT_MS = 120000; // 2 minutes
     private final Random random = new Random();         // random generator for initial filling
+    // TODO: declare count to count steps
 
     /**
      * Validates that the board is a correct Sudoku solution.
@@ -75,6 +76,7 @@ public class RMIT_Sudoku_Solver {
         int[][] current = new int[SIZE][SIZE];
 
         // Step 1: Preprocess with AllDifferent (initialize rows with all 1–9 without repetition)
+        // TODO: fine-tune, check row and col
         for (int row = 0; row < SIZE; row++) {
             List<Integer> available = new ArrayList<>();        // available numbers for this row
             for (int i = 1; i <= SIZE; i++) available.add(i);   // add 1 to 9
@@ -100,6 +102,7 @@ public class RMIT_Sudoku_Solver {
         Set<String> tabuList = new LinkedHashSet<>();   // tabu list to avoid repeating bad moves
 
         // step 2: tabu search to improve solution
+        // TODO: fine tune
         for (int iter = 0; iter < MAX_ITERATIONS; iter++) {
             if (System.currentTimeMillis() - startTime > TIME_LIMIT_MS) {
                 throw new RuntimeException("Timeout: Couldn't solve puzzle within 2 minutes.");

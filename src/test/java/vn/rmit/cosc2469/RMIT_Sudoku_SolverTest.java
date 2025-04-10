@@ -10,6 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class RMIT_Sudoku_SolverTest {
 
+
     RMIT_Sudoku_Solver solver;
 
     @BeforeEach
@@ -47,25 +48,25 @@ class RMIT_Sudoku_SolverTest {
                 {2, 4, 8, 9, 5, 7, 1, 3, 6},
                 {7, 6, 3, 4, 1, 8, 2, 5, 9}
         };
-//        int[][] result1 = solver.solve(puzzle1);
-//        // Print the result for debugging
-//        System.out.println("Solved Puzzle wildcatjan17:");
-//        for (int[] row : result1) {
-//            System.out.println(Arrays.toString(row));
-//        }
-//        assertArrayEquals(expected1, result1);
-
-        // check if the puzzle solver is working correctly by giving it up to 5 chances to solve a puzzle
-        int attempts1 = 3;
-        boolean passed1 = false;
-        for (int i = 0; i < attempts1; i++) {
-            int[][] result1 = solver.solve(puzzle1);
-            if (Arrays.deepEquals(expected1, result1)) {
-                passed1 = true;
-                break;
-            }
+        int[][] result1 = solver.solve(puzzle1);
+        // Print the result for debugging
+        System.out.println("Solved Puzzle wildcatjan17:");
+        for (int[] row : result1) {
+            System.out.println(Arrays.toString(row));
         }
-        assertTrue(passed1, "Solver 1 failed to solve correctly after " + attempts1 + " attempts.");
+        assertArrayEquals(expected1, result1);
+
+//        // check if the puzzle solver is working correctly by giving it up to 5 chances to solve a puzzle
+//        int attempts1 = 3;
+//        boolean passed1 = false;
+//        for (int i = 0; i < attempts1; i++) {
+//            int[][] result1 = solver.solve(puzzle1);
+//            if (Arrays.deepEquals(expected1, result1)) {
+//                passed1 = true;
+//                break;
+//            }
+//        }
+//        assertTrue(passed1, "Solver 1 failed to solve correctly after " + attempts1 + " attempts.");
 
 
         // wildcat18 -> takes 2-3 rerun to return correct answer
