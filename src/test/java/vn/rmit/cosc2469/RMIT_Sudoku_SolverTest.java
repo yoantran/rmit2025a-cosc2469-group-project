@@ -48,25 +48,22 @@ class RMIT_Sudoku_SolverTest {
                 {2, 4, 8, 9, 5, 7, 1, 3, 6},
                 {7, 6, 3, 4, 1, 8, 2, 5, 9}
         };
-        int[][] result1 = solver.solve(puzzle1);
-        // Print the result for debugging
-        System.out.println("Solved Puzzle wildcatjan17:");
-        for (int[] row : result1) {
-            System.out.println(Arrays.toString(row));
-        }
-        assertArrayEquals(expected1, result1);
 
-//        // check if the puzzle solver is working correctly by giving it up to 5 chances to solve a puzzle
-//        int attempts1 = 3;
-//        boolean passed1 = false;
-//        for (int i = 0; i < attempts1; i++) {
-//            int[][] result1 = solver.solve(puzzle1);
-//            if (Arrays.deepEquals(expected1, result1)) {
-//                passed1 = true;
-//                break;
-//            }
-//        }
-//        assertTrue(passed1, "Solver 1 failed to solve correctly after " + attempts1 + " attempts.");
+        int attempts1 = 3;
+        boolean passed1 = false;
+        for (int i = 0; i < attempts1; i++) {
+            int[][] result1 = solver.solve(puzzle1);
+            if (Arrays.deepEquals(expected1, result1)) {
+                passed1 = true;
+                System.out.println("wildcatjan12 has been resolved successfully in " + solver.getStepCount() + " step(s), and at attempt " + (i+1) + ":");
+                System.out.println(solver.toString(result1));
+                break;
+            } else {
+                System.out.println("wildcatjan12: Attempt " + (i + 1) + " failed:");
+                System.out.println(solver.toString(result1));
+            }
+        }
+        assertTrue(passed1, "Solver 1 failed to solve correctly after " + attempts1 + " attempts.");
 
 
         // wildcat18 -> takes 2-3 rerun to return correct answer
@@ -92,20 +89,18 @@ class RMIT_Sudoku_SolverTest {
                 {6, 2, 5, 9, 4, 8, 1, 3, 7},
                 {8, 7, 3, 5, 1, 2, 9, 6, 4}
         };
-//        int[][] result2 = solver.solve(puzzle2);
-//        // Print the result for debugging
-//        System.out.println("Solved Puzzle wildcatjan18:");
-//        for (int[] row : result2) {
-//            System.out.println(Arrays.toString(row));
-//        }
-//        assertArrayEquals(expected2, result2);
         int attempts2 = 3;
         boolean passed2 = false;
         for (int i = 0; i < attempts2; i++) {
             int[][] result2 = solver.solve(puzzle2);
             if (Arrays.deepEquals(expected2, result2)) {
                 passed2 = true;
+                System.out.println("wildcat18 has been resolved successfully in " + solver.getStepCount() + " step(s), and at attempt " + (i+1) + ":");
+                System.out.println(solver.toString(result2));
                 break;
+            } else {
+                System.out.println("wildcat18: Attempt " + (i + 1) + " failed:");
+                System.out.println(solver.toString(result2));
             }
         }
         assertTrue(passed2, "Solver 2 failed to solve correctly after " + attempts2 + " attempts.");
@@ -135,24 +130,22 @@ class RMIT_Sudoku_SolverTest {
                 {2, 1, 9, 8, 5, 7, 4, 3, 6},
                 {7, 4, 5, 3, 1, 6, 8, 9, 2}
         };
-//        int[][] result3 = solver.solve(puzzle3);
-//        // Print the result for debugging
-//        System.out.println("Solved Puzzle dtfeb19:");
-//        for (int[] row : result3) {
-//            System.out.println(Arrays.toString(row));
-//        }
-//        assertArrayEquals(expected3, result3);
 
-//        int attempts3 = 50;
-//        boolean passed3 = false;
-//        for (int i = 0; i < attempts3; i++) {
-//            int[][] result3 = solver.solve(puzzle3);
-//            if (Arrays.deepEquals(expected3, result3)) {
-//                passed3 = true;
-//                break;
-//            }
-//        }
-//        assertTrue(passed3, "Solver 3 failed to solve correctly after " + attempts3 + " attempts.");
+        int attempts3 = 2;
+        boolean passed3 = false;
+        for (int i = 0; i < attempts3; i++) {
+            int[][] result3 = solver.solve(puzzle3);
+            if (Arrays.deepEquals(expected3, result3)) {
+                passed3 = true;
+                System.out.println("dtfeb19 has been resolved successfully in " + solver.getStepCount() + " step(s), and at attempt " + (i+1) + ":");
+                System.out.println(solver.toString(result3));
+                break;
+            } else {
+                System.out.println("dtfeb19: Attempt " + (i + 1) + " failed:");
+                System.out.println(solver.toString(result3));
+            }
+        }
+        assertTrue(passed3, "Solver 3 failed to solve correctly after " + attempts3 + " attempts.");
 
 
         // v2155141

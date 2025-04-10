@@ -23,7 +23,7 @@ public class RMIT_Sudoku_Solver {
     private static final int MAX_ITERATIONS = 10000;
     private static final int TIME_LIMIT_MS = 120000; // 2 minutes
     private final Random random = new Random();         // random generator for initial filling
-    // TODO: declare count to count steps
+    private int stepCount = 0;
 
     /**
      * Validates that the board is a correct Sudoku solution.
@@ -153,6 +153,7 @@ public class RMIT_Sudoku_Solver {
                     }
                 }
             }
+            stepCount++; // increment step count
         }
 
         return best;        // return the best solution found
@@ -210,6 +211,26 @@ public class RMIT_Sudoku_Solver {
         }
 
         return conflicts;
+    }
+
+    public int getStepCount() {
+        return stepCount;
+    }
+
+    /**
+     * Converts a 2D Sudoku board to a readable string format.
+     */
+    public String toString(int[][] board) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
+                sb.append(board[i][j]).append(" ");
+                if ((j + 1) % 3 == 0 && j != SIZE - 1) sb.append("| ");
+            }
+            sb.append("\n");
+            if ((i + 1) % 3 == 0 && i != SIZE - 1) sb.append("------+-------+------\n");
+        }
+        return sb.toString();
     }
 
 
