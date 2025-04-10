@@ -5,6 +5,8 @@ import java.io.FileReader;
 
 import java.util.*;
 
+import vn.rmit.cosc2469.DancingLinks.DancingNode;
+
 public class Examples {
     private static int[][] fromString(String s) {
         int[][] board = new int[9][9];
@@ -17,6 +19,18 @@ public class Examples {
             }
         }
         return board;
+    }
+
+    private static void printSolution(int[][] result) {
+        int N = result.length;
+        for (int i = 0; i < N; i++) {
+            String ret = "";
+            for (int j = 0; j < N; j++) {
+                ret += result[i][j] + " ";
+            }
+            System.out.println(ret);
+        }
+        System.out.println();
     }
 
     private static void printStats(List<Long> timings) {
@@ -40,10 +54,10 @@ public class Examples {
 
         double std = Math.sqrt(sqsum / timings.size());
 
-        System.out.println("min: " + min * 1e-6);
-        System.out.println("max: " + max * 1e-6);
-        System.out.println("avg: " + avg * 1e-6);
-        System.out.println("std: " + std * 1e-6);
+        System.out.printf("min: %.3f\n", min * 1e-6);
+        System.out.printf("max: %.3f\n", max * 1e-6);
+        System.out.printf("avg: %.3f\n", avg * 1e-6);
+        System.out.printf("std: %.3f\n", std * 1e-6);
     }
 
     public static void runCoverExample() {
@@ -56,7 +70,10 @@ public class Examples {
         };
 
         DancingLinks DLX = new DancingLinks(example);
-        DLX.runSolver();
+        List<DancingNode> result = DLX.runSolver();
+        for (DancingNode node : result) {
+            System.out.println(node.C.name);
+        }
     }
 
     public static void runSudokuExample() {
@@ -73,7 +90,8 @@ public class Examples {
         }; // apparently the hardest sudoku
 
         SudokuDLX sudoku = new SudokuDLX();
-        sudoku.solve(hardest);
+        int[][] result = sudoku.solve(hardest);
+        printSolution(result);
     }
 
     public static void runExample() {
@@ -100,11 +118,13 @@ public class Examples {
 
                     long milis = System.nanoTime();
 
-                    solver.solve(sudoku);
+                    int[][] result = solver.solve(sudoku);
 
                     long elapsed = System.nanoTime() - milis;
 
                     timings.add(elapsed);
+
+                    printSolution(result);
 
                 }
 

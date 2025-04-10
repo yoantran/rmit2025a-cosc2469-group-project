@@ -9,52 +9,22 @@ abstract class AbstractSudokuSolver {
 
     // prints out all possible solutions. returns false if `sudoku` is invalid
     // to be implemented by concrete classes
-    protected abstract void runSolver(int[][] sudoku);
+    protected abstract int[][] runSolver(int[][] sudoku);
 
-    public boolean solve(int[][] sudoku) {
+    public int[][] solve(int[][] sudoku) {
         if (!validateSudoku(sudoku)) {
-            System.out.println("Error: Invalid sudoku. Aborting....");
-            return false;
+            System.out.println("Error: Invalid sudoku.");
+            return null;
         }
         S = sudoku.length;
         side = (int) Math.sqrt(S);
-        runSolver(sudoku);
-        return true;
-    }
-
-    public boolean solve(String[] s) {
-        return solve(fromCharArr(s));
-    }
-
-    private static int[][] fromCharArr(String[] s) {
-        int S = s.length;
-        int[][] out = new int[S][S];
-        for (int i = 0; i < S; i++) {
-            for (int j = 0; j < S; j++) {
-                int num = s[i].charAt(j) - '1';
-                if (num >= 1 && num <= S)
-                    out[i][j] = num;
-            }
-        }
-        return out;
-    }
-
-    public static void printSolution(int[][] result) {
-        int N = result.length;
-        for (int i = 0; i < N; i++) {
-            String ret = "";
-            for (int j = 0; j < N; j++) {
-                ret += result[i][j] + " ";
-            }
-            System.out.println(ret);
-        }
-        System.out.println();
+        return runSolver(sudoku);
     }
 
     // Checks whether `grid` represents a valid sudoku puzzle.
     // O's represent empty cells. 1..n^2 represent numbers in the grid.
     // Only allowed sizes are 9 and 16 for now.
-    protected static boolean validateSudoku(int[][] grid) {
+    protected boolean validateSudoku(int[][] grid) {
         if (grid.length != 9 && grid.length != 16)
             return false; // only 9 or 16 for now
         for (int i = 0; i < grid.length; i++) {

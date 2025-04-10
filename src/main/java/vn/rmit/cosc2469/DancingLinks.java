@@ -7,9 +7,6 @@ package vn.rmit.cosc2469;
 import java.util.*;
 
 public class DancingLinks {
-
-    static final boolean verbose = true;
-
     class DancingNode {
         DancingNode L, R, U, D;
         ColumnNode C;
@@ -100,45 +97,37 @@ public class DancingLinks {
     }
 
     private ColumnNode header;
-    private int solutions = 0;
     private int updates = 0;
-    private SolutionHandler handler;
     private List<DancingNode> answer;
 
     // Heart of the algorithm
-    private void search(int k) {
-        if (header.R == header) { // all the columns removed
-            if (verbose) {
-                System.out.println("-----------------------------------------");
-                System.out.println("Solution #" + solutions + "\n");
+    private boolean search(int k) {
+        if (header.R == header) // all the columns removed
+            return true;
+
+        ColumnNode c = selectColumnNodeHeuristic();
+        c.cover();
+
+        for (DancingNode r = c.D; r != c; r = r.D) {
+            answer.add(r);
+
+            for (DancingNode j = r.R; j != r; j = j.R) {
+                j.C.cover();
             }
-            handler.handleSolution(answer);
-            if (verbose) {
-                System.out.println("-----------------------------------------");
+
+            if (search(k + 1))
+                return true;
+
+            r = answer.remove(answer.size() - 1);
+            c = r.C;
+
+            for (DancingNode j = r.L; j != r; j = j.L) {
+                j.C.uncover();
             }
-            solutions++;
-        } else {
-            ColumnNode c = selectColumnNodeHeuristic();
-            c.cover();
-
-            for (DancingNode r = c.D; r != c; r = r.D) {
-                answer.add(r);
-
-                for (DancingNode j = r.R; j != r; j = j.R) {
-                    j.C.cover();
-                }
-
-                search(k + 1);
-
-                r = answer.remove(answer.size() - 1);
-                c = r.C;
-
-                for (DancingNode j = r.L; j != r; j = j.L) {
-                    j.C.uncover();
-                }
-            }
-            c.uncover();
         }
+        c.uncover();
+
+        return false;
     }
 
     private ColumnNode selectColumnNodeNaive() {
@@ -237,21 +226,17 @@ public class DancingLinks {
 
     // Grid consists solely of 1s and 0s. Undefined behaviour otherwise
     public DancingLinks(int[][] grid) {
-        this(grid, new DefaultHandler());
-    }
-
-    public DancingLinks(int[][] grid, SolutionHandler h) {
         header = makeDLXBoard(grid);
-        handler = h;
     }
 
-    public void runSolver() {
-        solutions = 0;
+    public List<DancingNode> runSolver() {
         updates = 0;
         answer = new LinkedList<DancingNode>();
-        search(0);
-        if (verbose)
+        if (search(0)) {
             showInfo();
+            return answer;
+        }
+        return null;
     }
 
 }
