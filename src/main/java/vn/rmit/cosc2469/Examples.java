@@ -89,8 +89,8 @@ public class Examples {
                 { 0, 9, 0, 0, 0, 0, 4, 0, 0 }
         }; // apparently the hardest sudoku
 
-        SudokuDLX sudoku = new SudokuDLX();
-        int[][] result = sudoku.solve(hardest);
+        AbstractSudokuSolver solver = new SudokuDLX();
+        int[][] result = solver.solve(hardest);
         printSolution(result);
     }
 
@@ -114,7 +114,7 @@ public class Examples {
 
                     int[][] sudoku = fromString(text);
 
-                    SudokuDLX solver = new SudokuDLX();
+                    AbstractSudokuSolver solver = new SudokuDLX();
 
                     long milis = System.nanoTime();
 
