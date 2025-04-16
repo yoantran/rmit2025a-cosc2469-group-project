@@ -3,10 +3,18 @@ package vn.rmit.cosc2469;
 public class SolverTimer {
     private static long globalStartTime = -1;
     private static final long TIME_LIMIT_MS = 2 * 60 * 1000; // 2 minutes
+    private static boolean hasStarted = false;
 
     // Start the timer
     public static void startTimer() {
-        globalStartTime = System.currentTimeMillis();
+//        globalStartTime = System.currentTimeMillis();
+
+        if (!hasStarted) {
+            globalStartTime = System.currentTimeMillis();
+            hasStarted = true;
+        } else {
+            timeElapsed();
+        }
     }
 
     // Check if time limit has been exceeded
@@ -18,7 +26,7 @@ public class SolverTimer {
     // Throw exception if time limit is exceeded
     public static void checkTimeout() {
         if (isTimedOut()) {
-            throw new TimeLimitExceededException("Solving exceeded the 2-minute time limit.");
+            throw new RuntimeException("❗Timeout: Could not solve puzzle within time limit.");
         }
     }
 

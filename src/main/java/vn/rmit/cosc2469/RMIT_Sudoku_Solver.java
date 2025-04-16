@@ -221,6 +221,8 @@ public class RMIT_Sudoku_Solver {
 
     public int[][] solveUntilValid(int[][] puzzle, int[][] expected) {
 //        long startTime = System.currentTimeMillis();
+        SolverTimer.startTimer();
+
         int attempt = 0;
 
         while (true) {
