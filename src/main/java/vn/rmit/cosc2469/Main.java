@@ -85,15 +85,45 @@ public class Main {
 
         System.out.println( "wildcatjan17 took " + solver.getStepCount() + " steps: " );
         System.out.println(solver.toString(solution1));
+        if (SudokuValidator.isValidSudoku(solution1)) {
+            System.out.println("The solution is valid.");
+        } else {
+            System.out.println("The solution is INVALID.");
+        }
         System.out.println( "wildcatjan18 took " + solver.getStepCount() + " steps: " );
         System.out.println(solver.toString(solution2));
+        if (SudokuValidator.isValidSudoku(solution2)) {
+            System.out.println("The solution is valid.");
+        } else {
+            System.out.println("The solution is INVALID.");
+        }
         System.out.println( "dtfeb19 took " + solver.getStepCount() + " steps: " );
         System.out.println(solver.toString(solution3));
+        if (SudokuValidator.isValidSudoku(solution3)) {
+            System.out.println("The solution is valid.");
+        } else {
+            System.out.println("The solution is INVALID.");
+        }
         System.out.println( "v2155141 took " + solver.getStepCount() + " steps: " );
         System.out.println(solver.toString(solution4));
+        if (SudokuValidator.isValidSudoku(solution4)) {
+            System.out.println("The solution is valid.");
+        } else {
+            System.out.println("The solution is INVALID.");
+        }
         System.out.println( "challenge2 took " + solver.getStepCount() + " steps: " );
         System.out.println(solver.toString(solution5));
+        if (SudokuValidator.isValidSudoku(solution5)) {
+            System.out.println("The solution is valid.");
+        } else {
+            System.out.println("The solution is INVALID.");
+        }
         System.out.println( "challenge1 took " + solver.getStepCount() + " steps: " );
         System.out.println(solver.toString(solution6));
+        if (SudokuValidator.isValidSudoku(solution6)) {
+            System.out.println("The solution is valid.");
+        } else {
+            System.out.println("The solution is INVALID.");
+        }
     }
 }

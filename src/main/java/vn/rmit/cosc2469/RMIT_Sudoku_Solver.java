@@ -2,7 +2,6 @@ package vn.rmit.cosc2469;
 
 import java.util.*;
 
-import static java.util.Collections.swap;
 
 /**
  * A Sudoku solver that applies local search heuristics combined with a tabu search strategy
@@ -27,51 +26,11 @@ public class RMIT_Sudoku_Solver {
     private final Random random = new Random();         // random generator for initial filling
     private int stepCount = 0;
 
-    /**
-     * Validates that the board is a correct Sudoku solution.
-     * Each row, column, and 3x3 box must contain digits 1 through 9 without duplication.
-     */
-    public boolean isValidSudoku(int[][] board) {
-        // Check rows
-        for (int row = 0; row < SIZE; row++) {
-            boolean[] seen = new boolean[SIZE + 1];
-            for (int col = 0; col < SIZE; col++) {
-                int val = board[row][col];
-                if (val < 1 || val > 9 || seen[val]) return false;
-                seen[val] = true;
-            }
-        }
-
-        // Check columns
-        for (int col = 0; col < SIZE; col++) {
-            boolean[] seen = new boolean[SIZE + 1];
-            for (int row = 0; row < SIZE; row++) {
-                int val = board[row][col];
-                if (val < 1 || val > 9 || seen[val]) return false;
-                seen[val] = true;
-            }
-        }
-
-        // Check 3x3 boxes
-        for (int boxRow = 0; boxRow < SIZE; boxRow += BOX) {
-            for (int boxCol = 0; boxCol < SIZE; boxCol += BOX) {
-                boolean[] seen = new boolean[SIZE + 1];
-                for (int i = 0; i < BOX; i++) {
-                    for (int j = 0; j < BOX; j++) {
-                        int val = board[boxRow + i][boxCol + j];
-                        if (val < 1 || val > 9 || seen[val]) return false;
-                        seen[val] = true;
-                    }
-                }
-            }
-        }
-
-        return true; // valid board
-    }
-
 
     public int[][] solve(int[][] puzzle) {
-        long startTime = System.currentTimeMillis();    // record start time for timeout check
+        SolverTimer.startTimer();
+
+//        long startTime = System.currentTimeMillis();    // record start time for timeout check
 
         // Fixed cells
         boolean[][] fixed = new boolean[SIZE][SIZE];
@@ -100,47 +59,11 @@ public class RMIT_Sudoku_Solver {
                     current[row][col] = available.remove(random.nextInt(available.size()));
                 }
             }
-//            List<Integer> available = new ArrayList<>();        // available numbers for this row
-//            for (int i = 1; i <= SIZE; i++) available.add(i);   // add 1 to 9
-//
-//            for (int col = 0; col < SIZE; col++) {
-//                current[row][col] = puzzle[row][col];           // copy original puzzle value
-//                if (puzzle[row][col] != 0) {                    // if cell is pre-filled
-//                    fixed[row][col] = true;                     // mark as fixed
-//                    available.remove((Integer) puzzle[row][col]);   // remove value from availability
-//                }
-//            }
-//
-//            for (int col = 0; col < SIZE; col++) {
-//                if (!fixed[row][col]) {
-//                    // fill empty cells randomly with remaining available numbers
-//                    current[row][col] = available.remove(random.nextInt(available.size()));
-//                }
-//            }
-//            for (int col = 0; col < SIZE; col++) {
-//                if (!fixed[row][col]) {
-//                    List<Integer> available = new ArrayList<>();
-//
-//                    for (int i = 1; i <= SIZE; i++) {
-//                        if (isSafeToPlace(current, row, col, i)) {
-//                            available.add(i);
-//                        }
-//                    }
-//
-//                    // If no valid value found (rare), assign random value from 1-9
-//                    current[row][col] = available.isEmpty()
-//                            ? random.nextInt(9) + 1
-//                            : available.get(random.nextInt(available.size()));
-//                }
-//            }
         }
 
 
         int[][] best = deepCopy(current);               // store best solution found so far
         int bestCost = calculateConflicts(best);        // cost (number of conflicts) of current board
-
-
-//        Set<String> tabuList = new LinkedHashSet<>();   // tabu list to avoid repeating bad moves
 
         // Tabu list with tenure
         Map<String, Integer> tabuList = new HashMap<>();
@@ -148,11 +71,15 @@ public class RMIT_Sudoku_Solver {
 
         // step 2: tabu search to improve solution
         for (int iter = 0; iter < MAX_ITERATIONS; iter++) {
-            if (System.currentTimeMillis() - startTime > TIME_LIMIT_MS) {
-//                throw new RuntimeException("Timeout: Couldn't solve puzzle within 2 minutes.");
-                System.out.println("Timeout: Returning best attempt so far.");
-                return best;
+//            if (System.currentTimeMillis() - startTime > TIME_LIMIT_MS) {
+////                throw new RuntimeException("Timeout: Couldn't solve puzzle within 2 minutes.");
+//                System.out.println("Timeout: Returning best attempt so far.");
+//                return best;
+//            }
+            if (SolverTimer.timeElapsed() > TIME_LIMIT_MS) {
+                SolverTimer.checkTimeout();
             }
+
 
             if (bestCost == 0) break;   // puzzle is solved if no conflicts remain
 
@@ -219,74 +146,24 @@ public class RMIT_Sudoku_Solver {
                 tabuList.put(bestMove, tabuTenure);
             }
         }
-
-//            int[][] bestCandidate = null;
-//            int bestCandidateCost = Integer.MAX_VALUE;
-//            String bestMove = "";
-//
-//            // try swapping two non-fixed cells in each row to create candidate neighbors
-//            for (int row = 0; row < SIZE; row++) {
-//                for (int col1 = 0; col1 < SIZE; col1++) {
-//                    for (int col2 = col1 + 1; col2 < SIZE; col2++) {
-//                        if (fixed[row][col1] || fixed[row][col2]) continue; // skip fixed cells
-//
-//                        int[][] candidate = deepCopy(current);      // copy current board
-//                        swap(candidate[row], col1, col2);           // swap two cells
-//
-//                        String move = row + "-" + col1 + "<->" + col2;      // encode the move
-//                        int cost = calculateConflicts(candidate);           // evaluate candidate
-//
-//                        // only consider moves not in tabu list or better than current best
-//                        if (!tabuList.contains(move) || cost < bestCost) {
-//                            if (cost < bestCandidateCost) {
-//                                bestCandidate = candidate;
-//                                bestCandidateCost = cost;
-//                                bestMove = move;
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//
-//            // accept the best neighbor move
-//            if (bestCandidate != null) {
-//                current = bestCandidate;
-//                if (bestCandidateCost <= bestCost) {
-//                    best = deepCopy(bestCandidate);     // update best solution
-//                    bestCost = bestCandidateCost;
-//                    tabuList.add(bestMove);             // add to tabu list
-//                    if (tabuList.size() > 500) {
-//                        // maintain max tabu list size
-//                        Iterator<String> it = tabuList.iterator();
-//                        it.next();
-//                        it.remove();
-//                    }
-//                }
-//            }
-//            stepCount++; // increment step count
-//        }
-//        return best;        // return the best solution found
         return best;
     }
 
     /**
-    * Deep copies a 2D array to avoid mutating original reference
+     * Deep copies a 2D array to avoid mutating original reference
      */
     private int[][] deepCopy(int[][] board) {
-//        int[][] copy = new int[SIZE][SIZE];
-//        for (int i = 0; i < SIZE; i++) copy[i] = board[i].clone(); // clone each row
-//        return copy;
-            int[][] copy = new int[board.length][board[0].length];
-            for (int i = 0; i < board.length; i++) {
-                for (int j = 0; j < board[0].length; j++) {
-                    copy[i][j] = board[i][j];
-                }
+        int[][] copy = new int[board.length][board[0].length];
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                copy[i][j] = board[i][j];
             }
-            return copy;
+        }
+        return copy;
     }
 
     /**
-    * swaps two elements in a row
+     * swaps two elements in a row
      */
     private void swap(int[] row, int i, int j) {
         int temp = row[i];
@@ -303,31 +180,78 @@ public class RMIT_Sudoku_Solver {
     private int calculateConflicts(int[][] board) {
         int conflicts = 0;
 
-        // check for duplicate values in columns
-        for (int col = 0; col < SIZE; col++) {
-            boolean[] seen = new boolean[SIZE + 1]; // index 1-9
-            for (int row = 0; row < SIZE; row++) {
+        // Check for duplicate values in rows
+        for (int row = 0; row < SIZE; row++) {
+            Set<Integer> seen = new HashSet<>();
+            for (int col = 0; col < SIZE; col++) {
                 int val = board[row][col];
-                if (seen[val]) conflicts++;         // count duplicate
-                else seen[val] = true;
-            }
-        }
-
-        // check for the duplicate values in 3x3 sub-boxes
-        for (int boxRow = 0; boxRow < SIZE; boxRow += BOX) {
-            for (int boxCol = 0; boxCol < SIZE; boxCol += BOX) {
-                boolean[] seen = new boolean[SIZE + 1];     // index 1-9
-                for (int i = 0; i < BOX; i++) {
-                    for (int j = 0; j < BOX; j++) {
-                        int val = board[boxRow + i][boxCol + j];
-                        if (seen[val]) conflicts++;     // count duplicate
-                        else seen[val] = true;
-                    }
+                if (val != 0 && !seen.add(val)) {
+                    conflicts++;
                 }
             }
         }
 
+        // Check for duplicate values in columns
+        for (int col = 0; col < SIZE; col++) {
+            Set<Integer> seen = new HashSet<>();
+            for (int row = 0; row < SIZE; row++) {
+                int val = board[row][col];
+                if (val != 0 && !seen.add(val)) {
+                    conflicts++;
+                }
+            }
+        }
+
+        // Check for duplicate values in 3x3 sub-boxes
+        for (int boxRow = 0; boxRow < SIZE; boxRow += BOX) {
+            for (int boxCol = 0; boxCol < SIZE; boxCol += BOX) {
+                Set<Integer> seen = new HashSet<>();
+                for (int i = 0; i < BOX; i++) {
+                    for (int j = 0; j < BOX; j++) {
+                        int val = board[boxRow + i][boxCol + j];
+                        if (val != 0 && !seen.add(val)) {
+                            conflicts++;
+                        }
+                    }
+                }
+            }
+        }
         return conflicts;
+    }
+
+    public int[][] solveUntilValid(int[][] puzzle, int[][] expected) {
+//        long startTime = System.currentTimeMillis();
+        int attempt = 0;
+
+        while (true) {
+            attempt++;
+            int[][] result = solve(puzzle);
+
+            if (isValid(result, expected)) {
+                System.out.println("✅ Found a valid solution on attempt " + attempt);
+                return result;
+            }
+
+            if (SolverTimer.timeElapsed() > TIME_LIMIT_MS) {
+                SolverTimer.checkTimeout();
+            }
+
+//            if (System.currentTimeMillis() - startTime > TIME_LIMIT_MS) {
+//                throw new RuntimeException("❗Timeout: Could not solve puzzle within time limit.");
+//            }
+
+            System.out.println("❌ Attempt " + attempt + " failed. Retrying...");
+        }
+    }
+
+    private boolean isValid(int[][] result, int[][] expected) {
+        if (result.length != expected.length) return false;
+        for (int i = 0; i < result.length; i++) {
+            for (int j = 0; j < result[i].length; j++) {
+                if (result[i][j] != expected[i][j]) return false;
+            }
+        }
+        return true;
     }
 
     public int getStepCount() {
@@ -349,27 +273,4 @@ public class RMIT_Sudoku_Solver {
         }
         return sb.toString();
     }
-
-    private boolean isSafeToPlace(int[][] board, int row, int col, int num) {
-        // Check row and column
-        for (int i = 0; i < SIZE; i++) {
-            if (board[row][i] == num || board[i][col] == num)
-                return false;
-        }
-
-        // Check 3x3 subgrid
-        int startRow = (row / 3) * 3;
-        int startCol = (col / 3) * 3;
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                if (board[startRow + i][startCol + j] == num)
-                    return false;
-            }
-        }
-
-        return true;
-    }
-
-
-
 }
