@@ -2,6 +2,8 @@ package vn.rmit.cosc2469;
 
 import java.util.*;
 
+import static vn.rmit.cosc2469.SudokuValidator.isValidSudoku;
+
 
 /**
  * A Sudoku solver that applies local search heuristics combined with a tabu search strategy
@@ -71,11 +73,6 @@ public class RMIT_Sudoku_Solver {
 
         // step 2: tabu search to improve solution
         for (int iter = 0; iter < MAX_ITERATIONS; iter++) {
-//            if (System.currentTimeMillis() - startTime > TIME_LIMIT_MS) {
-////                throw new RuntimeException("Timeout: Couldn't solve puzzle within 2 minutes.");
-//                System.out.println("Timeout: Returning best attempt so far.");
-//                return best;
-//            }
             if (SolverTimer.timeElapsed() > TIME_LIMIT_MS) {
                 SolverTimer.checkTimeout();
             }
@@ -219,7 +216,7 @@ public class RMIT_Sudoku_Solver {
         return conflicts;
     }
 
-    public int[][] solveUntilValid(int[][] puzzle, int[][] expected) {
+    public int[][] solveUntilValid(int[][] puzzle) {
 //        long startTime = System.currentTimeMillis();
         SolverTimer.startTimer();
 
@@ -229,8 +226,9 @@ public class RMIT_Sudoku_Solver {
             attempt++;
             int[][] result = solve(puzzle);
 
-            if (isValid(result, expected)) {
+            if (isValidSudoku(result)) {
                 System.out.println("✅ Found a valid solution on attempt " + attempt);
+                SolverTimer.resetTimer();
                 return result;
             }
 
@@ -238,22 +236,8 @@ public class RMIT_Sudoku_Solver {
                 SolverTimer.checkTimeout();
             }
 
-//            if (System.currentTimeMillis() - startTime > TIME_LIMIT_MS) {
-//                throw new RuntimeException("❗Timeout: Could not solve puzzle within time limit.");
-//            }
-
             System.out.println("❌ Attempt " + attempt + " failed. Retrying...");
         }
-    }
-
-    private boolean isValid(int[][] result, int[][] expected) {
-        if (result.length != expected.length) return false;
-        for (int i = 0; i < result.length; i++) {
-            for (int j = 0; j < result[i].length; j++) {
-                if (result[i][j] != expected[i][j]) return false;
-            }
-        }
-        return true;
     }
 
     public int getStepCount() {

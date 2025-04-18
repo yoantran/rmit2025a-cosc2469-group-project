@@ -35,4 +35,11 @@ public class SolverTimer {
         if (globalStartTime == -1) return 0;
         return System.currentTimeMillis() - globalStartTime;
     }
+
+    // Restarts the timer from 0 and sets hasStarted to true
+    public static void resetTimer() {
+        globalStartTime = System.currentTimeMillis();
+        hasStarted = true;
+        System.out.println("🔄 Timer reset");
+    }
 }

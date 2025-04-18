@@ -54,7 +54,7 @@ class RMIT_Sudoku_SolverTest {
 
 //        SolverTimer.startTimer(); // start global timer
 
-        int[][] result1 = solver.solveUntilValid(puzzle1, expected1);
+        int[][] result1 = solver.solveUntilValid(puzzle1);
         System.out.println("wildcatjan12 solution:");
                 System.out.println(solver.toString(result1));
         assertArrayEquals(expected1, result1);
@@ -107,7 +107,7 @@ class RMIT_Sudoku_SolverTest {
                 {8, 7, 3, 5, 1, 2, 9, 6, 4}
         };
 
-        int[][] result2 = solver.solveUntilValid(puzzle2, expected2);
+        int[][] result2 = solver.solveUntilValid(puzzle2);
         System.out.println("wildcatjan18 solution:");
         System.out.println(solver.toString(result2));
         assertArrayEquals(expected2, result2);
@@ -161,7 +161,7 @@ class RMIT_Sudoku_SolverTest {
                 {2, 1, 9, 8, 5, 7, 4, 3, 6},
                 {7, 4, 5, 3, 1, 6, 8, 9, 2}
         };
-        int[][] result3 = solver.solveUntilValid(puzzle3, expected3);
+        int[][] result3 = solver.solveUntilValid(puzzle3);
         System.out.println("dtfeb19 solution:");
         System.out.println(solver.toString(result3));
         assertArrayEquals(expected3, result3);
@@ -206,7 +206,7 @@ class RMIT_Sudoku_SolverTest {
                 {9, 1, 3, 7, 6, 8, 5, 2, 4},
                 {6, 2, 7, 4, 3, 5, 1, 9, 8},
         };
-        int[][] result4 = solver.solveUntilValid(puzzle4, expected4);
+        int[][] result4 = solver.solveUntilValid(puzzle4);
         System.out.println("v2155141 solution:");
         System.out.println(solver.toString(result4));
         assertArrayEquals(expected4, result4);
