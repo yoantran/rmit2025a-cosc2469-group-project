@@ -21,18 +21,21 @@ import static vn.rmit.cosc2469.SudokuValidator.isValidSudoku;
  * @return A completed 9x9 Sudoku grid if solvable within limits; otherwise, the best attempt
  */
 public class RMIT_Sudoku_Solver {
-    private static final int SIZE = 9;
+    private static final int SIZE = 9;  // size of sudoku grid
     private static final int BOX = 3;   // size of each 3x3 sub-box
-    private static final int MAX_ITERATIONS = 10000;
-    private static final int TIME_LIMIT_MS = 120000; // 2 minutes
+    private static final int MAX_ITERATIONS = 10000;    // the maximum number of iterations for the Tabu Search
+    private static final int TIME_LIMIT_MS = 120000;    // 2 minutes
     private final Random random = new Random();         // random generator for initial filling
     private int stepCount = 0;
 
-
+    /**
+     * Attempts to solve the given Sudoku puzzle using a Tabu Search algorithm.
+     *
+     * @param puzzle The initial Sudoku puzzle to solve.
+     * @return A completed 9x9 Sudoku grid if solvable within limits; otherwise, the best attempt.
+     */
     public int[][] solve(int[][] puzzle) {
         SolverTimer.startTimer();
-
-//        long startTime = System.currentTimeMillis();    // record start time for timeout check
 
         // Fixed cells
         boolean[][] fixed = new boolean[SIZE][SIZE];
@@ -68,7 +71,7 @@ public class RMIT_Sudoku_Solver {
         int bestCost = calculateConflicts(best);        // cost (number of conflicts) of current board
 
         // Tabu list with tenure
-        Map<String, Integer> tabuList = new HashMap<>();
+        Map<String, Integer> tabuList = new HashMap<>();    // map to store recently performed moves and their remaining tenure
         int tabuTenure = 7; // move will be forbidden for 7 iterations
 
         // step 2: tabu search to improve solution
@@ -83,7 +86,7 @@ public class RMIT_Sudoku_Solver {
             // Decrease remaining tenure for each tabu move
             List<String> expiredMoves = new ArrayList<>();
             for (Map.Entry<String, Integer> entry : tabuList.entrySet()) {
-                int remaining = entry.getValue() - 1;
+                int remaining = entry.getValue() - 1;   // decrease the remaining tenure
                 if (remaining <= 0) {
                     expiredMoves.add(entry.getKey());       // collect expired moves to remove later
                 } else {
@@ -106,7 +109,7 @@ public class RMIT_Sudoku_Solver {
                     for (int col2 = col1 + 1; col2 < SIZE; col2++) {
                         if (fixed[row][col1] || fixed[row][col2]) continue; // skip fixed
 
-                        // create a candiate solution by swapping two values in the row
+                        // create a candidate solution by swapping two values in the row
                         int[][] candidate = deepCopy(current);
                         swap(candidate[row], col1, col2);
 
@@ -147,7 +150,10 @@ public class RMIT_Sudoku_Solver {
     }
 
     /**
-     * Deep copies a 2D array to avoid mutating original reference
+     * Deep copies a 2D array to avoid mutating original reference.
+     *
+     * @param board The 2D integer array to copy.
+     * @return A new 2D integer array with the same contents as the input.
      */
     private int[][] deepCopy(int[][] board) {
         int[][] copy = new int[board.length][board[0].length];
@@ -160,7 +166,11 @@ public class RMIT_Sudoku_Solver {
     }
 
     /**
-     * swaps two elements in a row
+     * Swaps two elements in a row of the Sudoku board.
+     *
+     * @param row The integer array representing the row.
+     * @param i   The index of the first element to swap.
+     * @param j   The index of the second element to swap.
      */
     private void swap(int[] row, int i, int j) {
         int temp = row[i];
@@ -171,8 +181,11 @@ public class RMIT_Sudoku_Solver {
     /**
      * Calculates the total number of conflicts in the grid.
      * Conflicts are counted in:
-     *   - Columns (duplicate numbers)
-     *   - 3x3 boxes (duplicate numbers)
+     * - Columns (duplicate numbers)
+     * - 3x3 boxes (duplicate numbers)
+     *
+     * @param board The Sudoku board to evaluate for conflicts.
+     * @return The total number of conflicts found in the board.
      */
     private int calculateConflicts(int[][] board) {
         int conflicts = 0;
@@ -216,8 +229,13 @@ public class RMIT_Sudoku_Solver {
         return conflicts;
     }
 
+    /**
+     * Repeatedly calls the solve method until a valid Sudoku solution is found.
+     *
+     * @param puzzle The initial Sudoku puzzle to solve.
+     * @return A valid completed 9x9 Sudoku grid.
+     */
     public int[][] solveUntilValid(int[][] puzzle) {
-//        long startTime = System.currentTimeMillis();
         SolverTimer.startTimer();
 
         int attempt = 0;
@@ -246,6 +264,9 @@ public class RMIT_Sudoku_Solver {
 
     /**
      * Converts a 2D Sudoku board to a readable string format.
+     *
+     * @param board The Sudoku board to convert to a string.
+     * @return A string representation of the Sudoku board.
      */
     public String toString(int[][] board) {
         StringBuilder sb = new StringBuilder();
