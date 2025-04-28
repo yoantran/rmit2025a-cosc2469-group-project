@@ -30,6 +30,8 @@ public class Sudoku_Tabu_Search_Solver {
         if (!timerStarted) {
             startTime = System.currentTimeMillis();
             timerStarted = true;
+        } else {
+            timeElapsed();
         }
     }
 
@@ -45,6 +47,13 @@ public class Sudoku_Tabu_Search_Solver {
         if (isTimedOut()) {
             throw new RuntimeException("❗Timeout: Could not solve puzzle within time limit.");
         }
+    }
+
+    // Restarts the timer from 0 and sets timerStarted to true
+    public void resetTimer() {
+        startTime = System.currentTimeMillis();
+        timerStarted = true;
+        System.out.println("🔄 Timer reset");
     }
 
     /**
@@ -266,7 +275,7 @@ public class Sudoku_Tabu_Search_Solver {
             if (isValidSudoku(result)) {
                 System.out.println("✅ Found a valid solution on attempt " + attempt +
                         " in " + timeElapsed() + " ms");
-                // No need to reset timer here if we are tracking the total solving time
+                resetTimer();
                 return result;
             }
 

@@ -21,20 +21,7 @@ class Sudoku_Tabu_Search_SolverTest {
 
     @Test
     void solve() {
-        String filePath = "test-data/intermediate.csv"; // Change this to try another puzzle
-
-        // wildcatjan12 -> takes 2-3 rerun to return correct answer
-        int[][] puzzle1 = {
-                {0, 0, 0, 2, 6, 0, 7, 0, 1},
-                {6, 8, 0, 0, 7, 0, 0, 9, 0},
-                {1, 9, 0, 0, 0, 4, 5, 0, 0},
-                {8, 2, 0, 1, 0, 0, 0, 4, 0},
-                {0, 0, 4, 6, 0, 2, 9, 0, 0},
-                {0, 5, 0, 0, 0, 3, 0, 2, 8},
-                {0, 0, 9, 3, 0, 0, 0, 7, 4},
-                {0, 4, 0, 0, 5, 0, 0, 3, 6},
-                {7, 0, 3, 0, 1, 8, 0, 0, 0}
-        };
+        // Easiest 1
         int[][] expected1 = {
                 {4, 3, 5, 2, 6, 9, 7, 8, 1},
                 {6, 8, 2, 5, 7, 1, 4, 9, 3},
@@ -47,52 +34,14 @@ class Sudoku_Tabu_Search_SolverTest {
                 {7, 6, 3, 4, 1, 8, 2, 5, 9}
         };
 
-//        int attempts1 = 5;
-//        boolean passed1 = false;
-
-//        SolverTimer.startTimer(); // start global timer
-
+        int[][] puzzle1 = SudokuSolverHelper.loadSudokuFromCSV("test-data/easiest1.csv");
         int[][] result1 = solver.solveUntilValid(puzzle1);
-        System.out.println("wildcatjan12 solution:");
+        System.out.println("Easiest Puzzle 1 solution:");
         System.out.println(solver.toString(result1));
         assertArrayEquals(expected1, result1);
 
-//        int[][] result1 = solver.solve(puzzle1);
-//        // Print the result for debugging
-//        System.out.println("Solved Puzzle wildcatjan12:");
-//        for (int[] row : result1) {
-//            System.out.println(Arrays.toString(row));
-//        }
-//        assertArrayEquals(expected1, result1);
 
-
-//        for (int i = 0; i < attempts1; i++) {
-//            int[][] result1 = solver.solve(puzzle1);
-//            if (Arrays.deepEquals(expected1, result1)) {
-//                passed1 = true;
-//                System.out.println("wildcatjan12 has been resolved successfully in " + solver.getStepCount() + " step(s), and at attempt " + (i+1) + ":");
-//                System.out.println(solver.toString(result1));
-//                break;
-//            } else {
-//                System.out.println("wildcatjan12: Attempt " + (i + 1) + " failed:");
-//                System.out.println(solver.toString(result1));
-//            }
-//        }
-//        assertTrue(passed1, "Solver 1 failed to solve correctly after " + attempts1 + " attempts.");
-
-
-        // wildcat18 -> takes 2-3 rerun to return correct answer
-        int[][] puzzle2 = {
-                {1, 0, 0, 4, 8, 9, 0, 0, 6},
-                {7, 3, 0, 0, 0, 0, 0, 4, 0},
-                {0, 0, 0, 0, 0, 1, 2, 9, 5},
-                {0, 0, 7, 1, 2, 0, 6, 0, 0},
-                {5, 0, 0, 7, 0, 3, 0, 0, 8},
-                {0, 0, 6, 0, 9, 5, 7, 0, 0},
-                {9, 1, 4, 6, 0, 0, 0, 0, 0},
-                {0, 2, 0, 0, 0, 0, 0, 3, 7},
-                {8, 0, 0, 5, 1, 2, 0, 0, 4}
-        };
+        // Easiest 2
         int[][] expected2 = {
                 {1, 5, 2, 4, 8, 9, 3, 7, 6},
                 {7, 3, 9, 2, 5, 6, 8, 4, 1},
@@ -104,50 +53,14 @@ class Sudoku_Tabu_Search_SolverTest {
                 {6, 2, 5, 9, 4, 8, 1, 3, 7},
                 {8, 7, 3, 5, 1, 2, 9, 6, 4}
         };
-
+        int[][] puzzle2 = SudokuSolverHelper.loadSudokuFromCSV("test-data/easiest2.csv");
         int[][] result2 = solver.solveUntilValid(puzzle2);
-        System.out.println("wildcatjan18 solution:");
+        System.out.println("Easiest Puzzle 2 solution:");
         System.out.println(solver.toString(result2));
         assertArrayEquals(expected2, result2);
 
-//        int[][] result2 = solver.solve(puzzle2);
-//        // Print the result for debugging
-//        System.out.println("Solved Puzzle wildcat18:");
-//        for (int[] row : result2) {
-//            System.out.println(Arrays.toString(row));
-//        }
-//        assertArrayEquals(expected2, result2);
 
-//        int attempts2 = 10;
-//        boolean passed2 = false;
-//        for (int i = 0; i < attempts2; i++) {
-//            int[][] result2 = solver.solve(puzzle2);
-//            if (Arrays.deepEquals(expected2, result2)) {
-//                passed2 = true;
-//                System.out.println("wildcat18 has been resolved successfully in " + solver.getStepCount() + " step(s), and at attempt " + (i+1) + ":");
-//                System.out.println(solver.toString(result2));
-//                break;
-//            } else {
-//                System.out.println("wildcat18: Attempt " + (i + 1) + " failed:");
-//                System.out.println(solver.toString(result2));
-//            }
-//        }
-//        assertTrue(passed2, "Solver 2 failed to solve correctly after " + attempts2 + " attempts.");
-
-
-
-        //dtfeb19
-        int[][] puzzle3 = {
-                {0, 2, 0, 6, 0, 8, 0, 0, 0},
-                {5, 8, 0, 0, 0, 9, 7, 0, 0},
-                {0, 0, 0, 0, 4, 0, 0, 0, 0},
-                {3, 7, 0, 0, 0, 0, 5, 0, 0},
-                {6, 0, 0, 0, 0, 0, 0, 0, 4},
-                {0, 0, 8, 0, 0, 0, 0, 1, 3},
-                {0, 0, 0, 0, 2, 0, 0, 0, 0},
-                {0, 0, 9, 8, 0, 0, 0, 3, 6},
-                {0, 0, 0, 3, 0, 6, 0, 9, 0}
-        };
+        // Intermidate
         int[][] expected3 = {
                 {1, 2, 3, 6, 7, 8, 9, 4, 5},
                 {5, 8, 4, 2, 3, 9, 7, 6, 1},
@@ -159,40 +72,14 @@ class Sudoku_Tabu_Search_SolverTest {
                 {2, 1, 9, 8, 5, 7, 4, 3, 6},
                 {7, 4, 5, 3, 1, 6, 8, 9, 2}
         };
+        int[][] puzzle3 = SudokuSolverHelper.loadSudokuFromCSV("test-data/intermediate.csv");
         int[][] result3 = solver.solveUntilValid(puzzle3);
-        System.out.println("dtfeb19 solution:");
+        System.out.println("Intermediate Puzzle solution:");
         System.out.println(solver.toString(result3));
         assertArrayEquals(expected3, result3);
 
-//        int attempts3 = 100;
-//        boolean passed3 = false;
-//        for (int i = 0; i < attempts3; i++) {
-//            int[][] result3 = solver.solve(puzzle3);
-//            if (Arrays.deepEquals(expected3, result3)) {
-//                passed3 = true;
-//                System.out.println("dtfeb19 has been resolved successfully in " + solver.getStepCount() + " step(s), and at attempt " + (i+1) + ":");
-//                System.out.println(solver.toString(result3));
-//                break;
-//            } else {
-//                System.out.println("dtfeb19: Attempt " + (i + 1) + " failed:");
-//                System.out.println(solver.toString(result3));
-//            }
-//        }
-//        assertTrue(passed3, "Solver 3 failed to solve correctly after " + attempts3 + " attempts.");
 
-
-        // v2155141
-        int[][] puzzle4 = {
-                {0, 0, 0, 6, 0, 0, 4, 0, 0},
-                {7, 0, 0, 0, 0, 3, 6, 0, 0},
-                {0, 0, 0, 0, 9, 1, 0, 8, 0},
-                {0, 0, 0, 0, 0, 0, 0, 0, 0},
-                {0, 5, 0, 1, 8, 0, 0, 0, 3},
-                {0, 0, 0, 3, 0, 6, 0, 4, 5},
-                {0, 4, 0, 2, 0, 0, 0, 6, 0},
-                {9, 0, 3, 0, 0, 0, 0, 0, 0},
-                {0, 2, 0, 0, 0, 0, 1, 0, 0},
-        };
+        // difficult 1
         int[][] expected4 = {
                 {5, 8, 1, 6, 7, 2, 4, 3, 9},
                 {7, 9, 2, 8, 4, 3, 6, 5, 1},
@@ -204,40 +91,14 @@ class Sudoku_Tabu_Search_SolverTest {
                 {9, 1, 3, 7, 6, 8, 5, 2, 4},
                 {6, 2, 7, 4, 3, 5, 1, 9, 8},
         };
+        int[][] puzzle4 = SudokuSolverHelper.loadSudokuFromCSV("test-data/difficult1.csv");
         int[][] result4 = solver.solveUntilValid(puzzle4);
-        System.out.println("v2155141 solution:");
+        System.out.println("Difficult Puzzle 1 solution:");
         System.out.println(solver.toString(result4));
         assertArrayEquals(expected4, result4);
 
-//        int attempts4 = 100;
-//        boolean passed4 = false;
-//        for (int i = 0; i < attempts4; i++) {
-//            int[][] result4 = solver.solve(puzzle4);
-//            if (Arrays.deepEquals(expected4, result4)) {
-//                passed4 = true;
-//                System.out.println("v2155141 has been resolved successfully in " + solver.getStepCount() + " step(s), and at attempt " + (i+1) + ":");
-//                System.out.println(solver.toString(result4));
-//                break;
-//            } else {
-//                System.out.println("v2155141: Attempt " + (i + 1) + " failed:");
-//                System.out.println(solver.toString(result4));
-//            }
-//        }
-//        assertTrue(passed4, "Solver 4 failed to solve correctly after " + attempts4 + " attempts.");
 
-
-//        // challenge2
-        int[][] puzzle5 = {
-                {2, 0, 0, 3, 0, 0, 0, 0, 0},
-                {8, 0, 4, 0, 6, 2, 0, 0, 3},
-                {0, 1, 3, 8, 0, 0, 2, 0, 0},
-                {0, 0, 0, 0, 2, 0, 3, 9, 0},
-                {5, 0, 7, 0, 0, 0, 6, 2, 1},
-                {0, 3, 2, 0, 0, 6, 0, 0, 0},
-                {0, 2, 0, 0, 0, 9, 1, 4, 0},
-                {6, 0, 1, 2, 5, 0, 8, 0, 9},
-                {0, 0, 0, 0, 0, 1, 0, 0, 2},
-        };
+        // difficult 2
         int[][] expected5 = {
                 {2, 7, 6, 3, 1, 4, 9, 5, 8},
                 {8, 5, 4, 9, 6, 2, 7, 1, 3},
@@ -249,35 +110,13 @@ class Sudoku_Tabu_Search_SolverTest {
                 {6, 4, 1, 2, 5, 3, 8, 7, 9},
                 {7, 8, 9, 6, 4, 1, 5, 3, 2},
         };
-//        int attempts5 = 100;
-//        boolean passed5 = false;
-//        for (int i = 0; i < attempts5; i++) {
-//            int[][] result5 = solver.solve(puzzle5);
-//            if (Arrays.deepEquals(expected5, result5)) {
-//                passed5 = true;
-//                System.out.println("v2155141 has been resolved successfully in " + solver.getStepCount() + " step(s), and at attempt " + (i+1) + ":");
-//                System.out.println(solver.toString(result5));
-//                break;
-//            } else {
-//                System.out.println("v2155141: Attempt " + (i + 1) + " failed:");
-//                System.out.println(solver.toString(result5));
-//            }
-//        }
-//        assertTrue(passed5, "Solver 5 failed to solve correctly after " + attempts5 + " attempts.");
+        int[][] puzzle5 = SudokuSolverHelper.loadSudokuFromCSV("test-data/difficult2.csv");
+        int[][] result5 = solver.solveUntilValid(puzzle5);
+        System.out.println("Difficult Puzzle 2 solution:");
+        System.out.println(solver.toString(result5));
+        assertArrayEquals(expected5, result5);
 
-
-        // challenge1
-        int[][] puzzle6 = {
-                {0, 2, 0, 0, 0, 0, 0, 0, 0},
-                {0, 0, 0, 6, 0, 0, 0, 0, 3},
-                {0, 7, 4, 0, 8, 0, 0, 0, 0},
-                {0, 0, 0, 0, 0, 3, 0, 0, 2},
-                {0, 8, 0, 0, 4, 0, 0, 1, 0},
-                {6, 0, 0, 5, 0, 0, 0, 0, 0},
-                {0, 0, 0, 0, 1, 0, 7, 8, 0},
-                {5, 0, 0, 0, 0, 9, 0, 0, 0},
-                {0, 0, 0, 0, 0, 0, 0, 4, 0},
-        };
+        // Not Fun
         int[][] expected6 = {
                 {1, 2, 6, 4, 3, 7, 9, 5, 8},
                 {8, 9, 5, 6, 2, 1, 4, 7, 3},
@@ -289,20 +128,10 @@ class Sudoku_Tabu_Search_SolverTest {
                 {5, 4, 8, 7, 6, 9, 2, 3, 1},
                 {7, 3, 1, 8, 5, 2, 6, 4, 9},
         };
-//        int attempts6 = 100;
-//        boolean passed6 = false;
-//        for (int i = 0; i < attempts6; i++) {
-//            int[][] result6 = solver.solve(puzzle6);
-//            if (Arrays.deepEquals(expected6, result6)) {
-//                passed6 = true;
-//                System.out.println("v2155141 has been resolved successfully in " + solver.getStepCount() + " step(s), and at attempt " + (i+1) + ":");
-//                System.out.println(solver.toString(result6));
-//                break;
-//            } else {
-//                System.out.println("v2155141: Attempt " + (i + 1) + " failed:");
-//                System.out.println(solver.toString(result6));
-//            }
-//        }
-//        assertTrue(passed6, "Solver 4 failed to solve correctly after " + attempts6 + " attempts.");
+        int[][] puzzle6 = SudokuSolverHelper.loadSudokuFromCSV("test-data/notfun.csv");
+        int[][] result6 = solver.solveUntilValid(puzzle6);
+        System.out.println("Not Fun Puzzle solution:");
+        System.out.println(solver.toString(result6));
+        assertArrayEquals(expected6, result6);
     }
 }
