@@ -1,50 +1,67 @@
 package vn.rmit.cosc2469;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+
 public class MainRunner {
     public static void main(String[] args) {
         String filePath = "test-data/intermediate.csv"; // Change this to try another puzzle
 
-        try {
-            int[][] puzzle = SudokuSolverHelper.loadSudokuFromCSV(filePath);
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            String line;
 
-            // Track memory and time
-            long startTime = System.nanoTime();
-            long startMemory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+            while ((line = br.readLine()) != null) {
+                int[][] puzzle = new int[9][9];
+                int row = 0;
 
-            // Prepare logger with filename
-            SolverLogger logger = new SolverLogger(filePath);
+                while ((line = br.readLine()) != null && !line.equals("")) {
+                    String[] tokens = line.split(",");
+                    for (int col = 0; col < tokens.length && col < 9; col++) {
+                        puzzle[row][col] = Integer.parseInt(tokens[col].trim());
+                    }
+                    row++;
+                }
 
-            // Set up solver and inject logger
-            RMIT_Sudoku_Solver solver = new RMIT_Sudoku_Solver();
-            solver.setLogger(logger);
+                // Prepare logger with filename
+                SolverLogger logger = new SolverLogger(filePath);
 
-            // Solve
-            System.out.println("Original Puzzle:");
-            printBoard(puzzle);
+                // Set up solver and inject logger
+                RMIT_Sudoku_Solver solver = new RMIT_Sudoku_Solver();
+                solver.setLogger(logger);
 
-            int[][] solved = solver.solve(puzzle);
+                // Solve
+                System.out.println("Original Puzzle:");
+                printBoard(puzzle);
 
-            long endTime = System.nanoTime();
-            long endMemory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+                // Start measurements here
+                System.gc();
+                long startTime = System.nanoTime();
+                long startMemory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
 
-            // Output solved puzzle
-            System.out.println("\nSolved Puzzle:");
-            printBoard(solved);
+                int[][] solved = solver.solve(puzzle);
 
-            // Validate
-            boolean isValid = SudokuSolverHelper.isValidSudoku(solved);
-            System.out.println("\n✅ Is solution valid? " + isValid);
+                // End measurements immediately after solving
+                long endTime = System.nanoTime();
+                long endMemory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
 
-            // Save step-by-step log
-            logger.saveToCSV();
+                // Output solved puzzle
+                System.out.println("\nSolved Puzzle:");
+                printBoard(solved);
 
-            // Time and memory
-            double durationMs = (endTime - startTime) / 1_000_000.0;
-            double memoryKB = (endMemory - startMemory) / 1024.0;
+                // Validate
+                boolean isValid = SudokuSolverHelper.isValidSudoku(solved);
+                System.out.println("\n✅ Is solution valid? " + isValid);
 
-            System.out.printf("🕒 Time taken: %.2f ms\n", durationMs);
-            System.out.printf("📦 Memory used: %.2f KB\n", memoryKB);
+                // Save step-by-step log
+                logger.saveToCSV();
 
+                // Time and memory
+                double durationMs = (endTime - startTime) / 1_000_000.0;
+                double memoryKB = (endMemory - startMemory) / 1024.0;
+
+                System.out.printf("🕒 Time taken: %.2f ms\n", durationMs);
+                System.out.printf("📦 Memory used: %.2f KB\n\n", memoryKB);
+            }
         } catch (Exception e) {
             System.out.println("❌ Error: " + e.getMessage());
             e.printStackTrace();
