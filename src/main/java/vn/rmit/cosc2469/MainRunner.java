@@ -5,14 +5,20 @@ import java.io.FileReader;
 
 public class MainRunner {
     public static void main(String[] args) {
-        String filePath = "test-data/intermediate.csv"; // Change this to try another puzzle
+        String filePath = "test-data/easy.csv"; // Change this to try another puzzle
 
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             String line;
 
-            while ((line = br.readLine()) != null) {
+            while ((line = br.readLine()) != null && !line.equals("")) {
                 int[][] puzzle = new int[9][9];
                 int row = 0;
+
+                String[] firstLineTokens = line.split(",");
+                for (int col = 0; col < firstLineTokens.length && col < 9; col++) {
+                    puzzle[row][col] = Integer.parseInt(firstLineTokens[col].trim());
+                }
+                row++;
 
                 while ((line = br.readLine()) != null && !line.equals("")) {
                     String[] tokens = line.split(",");

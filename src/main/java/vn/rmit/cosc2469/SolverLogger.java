@@ -20,6 +20,17 @@ public class SolverLogger {
 
     public void saveToCSV() {
         File file = new File(outputFilePath);
+
+        // Create output directory if it doesn't exist
+        File outputDir = file.getParentFile();
+        if (outputDir != null && !outputDir.exists()) {
+            boolean created = outputDir.mkdirs();
+            if (!created) {
+                System.err.println("❌ Failed to create output directory: " + outputDir.getAbsolutePath());
+                return;
+            }
+        }
+
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
             for (int i = 0; i < steps.size(); i++) {
                 writer.write((i + 1) + ". " + steps.get(i));
