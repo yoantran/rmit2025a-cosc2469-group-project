@@ -3,7 +3,7 @@ package vn.rmit.cosc2469;
 import java.io.BufferedReader;
 import java.io.FileReader;
 
-public class MainRunner {
+public class Main {
     public static void main(String[] args) {
         String filePath = "test-data/easy.csv"; // Change this to try another puzzle
 
@@ -32,8 +32,8 @@ public class MainRunner {
                 SolverLogger logger = new SolverLogger(filePath);
 
                 // Set up solver and inject logger
-                RMIT_Sudoku_Solver solver = new RMIT_Sudoku_Solver();
-                solver.setLogger(logger);
+                RMIT_Sudoku_Solver solver = new FullBacktrackingSolver();
+                ((FullBacktrackingSolver) solver).setLogger(logger);
 
                 // Solve
                 System.out.println("Original Puzzle:");
@@ -55,7 +55,7 @@ public class MainRunner {
                 printBoard(solved);
 
                 // Validate
-                boolean isValid = SudokuSolverHelper.isValidSudoku(solved);
+                boolean isValid = SudokuValidator.isValidSudoku(solved);
                 System.out.println("\n✅ Is solution valid? " + isValid);
 
                 // Save step-by-step log

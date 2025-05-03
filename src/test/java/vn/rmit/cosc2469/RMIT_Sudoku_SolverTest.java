@@ -7,19 +7,84 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.io.IOException;
 
 public class RMIT_Sudoku_SolverTest {
+    @Test
+    public void testEasy() throws IOException {
+        int[][] puzzle = {
+                { 0, 0, 0, 2, 6, 0, 7, 0, 1 },
+                { 6, 8, 0, 0, 7, 0, 0, 9, 0 },
+                { 1, 9, 0, 0, 0, 4, 5, 0, 0 },
+                { 8, 2, 0, 1, 0, 0, 0, 4, 0 },
+                { 0, 0, 4, 6, 0, 2, 9, 0, 0 },
+                { 0, 5, 0, 0, 0, 3, 0, 2, 8 },
+                { 0, 0, 9, 3, 0, 0, 0, 7, 4 },
+                { 0, 4, 0, 0, 5, 0, 0, 3, 6 },
+                { 7, 0, 3, 0, 1, 8, 0, 0, 0 }
+        };
+        RMIT_Sudoku_Solver solver = new FullBacktrackingSolver();
+        int[][] solved = solver.solve(puzzle);
+
+        boolean isValid = SudokuValidator.isValidSudoku(solved);
+        assertTrue(isValid, "Solution is not valid");
+    }
 
     @Test
-    public void testEasiest1() throws IOException {
-        int[][] puzzle = SudokuSolverHelper.loadSudokuFromCSV("test-data/easiest1.csv");
-        RMIT_Sudoku_Solver solver = new RMIT_Sudoku_Solver();
-        int[][] solution = solver.solve(puzzle);
+    public void testIntermediate() throws IOException {
+        int[][] puzzle = {
+                { 0, 2, 0, 6, 0, 8, 0, 0, 0 },
+                { 5, 8, 0, 0, 0, 9, 7, 0, 0 },
+                { 0, 0, 0, 0, 4, 0, 0, 0, 0 },
+                { 3, 7, 0, 0, 0, 0, 5, 0, 0 },
+                { 6, 0, 0, 0, 0, 0, 0, 0, 4 },
+                { 0, 0, 8, 0, 0, 0, 0, 1, 3 },
+                { 0, 0, 0, 0, 2, 0, 0, 0, 0 },
+                { 0, 0, 9, 8, 0, 0, 0, 3, 6 },
+                { 0, 0, 0, 3, 0, 6, 0, 9, 0 },
+        };
+        RMIT_Sudoku_Solver solver = new FullBacktrackingSolver();
+        int[][] solved = solver.solve(puzzle);
 
-        // Check no zeros
-        for (int r = 0; r < 9; r++) {
-            for (int c = 0; c < 9; c++) {
-                assertTrue(solution[r][c] != 0);
-            }
-        }
+        boolean isValid = SudokuValidator.isValidSudoku(solved);
+        assertTrue(isValid, "Solution is not valid");
     }
-    // Add more tests for other CSVs if you wish
+
+    @Test
+    public void testDifficult() throws IOException {
+        int[][] puzzle = {
+                { 0, 0, 0, 6, 0, 0, 4, 0, 0 },
+                { 7, 0, 0, 0, 0, 3, 6, 0, 0 },
+                { 0, 0, 0, 0, 9, 1, 0, 8, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 5, 0, 1, 8, 0, 0, 0, 3 },
+                { 0, 0, 0, 3, 0, 6, 0, 4, 5 },
+                { 0, 4, 0, 2, 0, 0, 0, 6, 0 },
+                { 9, 0, 3, 0, 0, 0, 0, 0, 0 },
+                { 0, 2, 0, 0, 0, 0, 1, 0, 0 },
+        };
+        RMIT_Sudoku_Solver solver = new FullBacktrackingSolver();
+        int[][] solved = solver.solve(puzzle);
+
+        boolean isValid = SudokuValidator.isValidSudoku(solved);
+        assertTrue(isValid, "Solution is not valid");
+    }
+
+    @Test
+    public void testNotFun() throws IOException {
+        int[][] puzzle = {
+                { 0, 2, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 6, 0, 0, 0, 0, 3 },
+                { 0, 7, 4, 0, 8, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 3, 0, 0, 2 },
+                { 0, 8, 0, 0, 4, 0, 0, 1, 0 },
+                { 6, 0, 0, 5, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 1, 0, 7, 8, 0 },
+                { 5, 0, 0, 0, 0, 9, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 4, 0 },
+        };
+        RMIT_Sudoku_Solver solver = new FullBacktrackingSolver();
+        int[][] solved = solver.solve(puzzle);
+
+        boolean isValid = SudokuValidator.isValidSudoku(solved);
+        assertTrue(isValid, "Solution is not valid");
+    }
+
 }

@@ -10,27 +10,31 @@ import java.util.Set;
  * you can add that here. But this basic version typically solves "intermediate"
  * puzzles quickly if there's no bug and the puzzle is valid.
  */
-public class MyAdvancedSudokuSolver {
-
+public class MyAdvancedSudokuSolver extends RMIT_Sudoku_Solver {
     private static final int SIZE = 9;
     private static final int EMPTY = 0;
+    private SolverTimer timer;
 
-    private static final long TIME_LIMIT_MS = 2L * 60_000; // 2 minutes
+    public MyAdvancedSudokuSolver() {
+        this.timer = new SolverTimer();
+    }
 
-    public void solveInPlace(int[][] board) {
-        long startTime = System.currentTimeMillis();
-        if (!solveRecursively(board, startTime)) {
+    @Override
+    public int[][] solveSudoku(int[][] board) {
+        timer.start();
+
+        if (solveRecursively(board)) {
+            return board;
+        } else {
             throw new IllegalStateException("No valid assignment found => puzzle unsolvable or timed out.");
         }
     }
 
-    private boolean solveRecursively(int[][] board, long startTime) {
+    private boolean solveRecursively(int[][] board) {
         // 1) Repeated "naked singles" pass
         boolean changed = true;
         while (changed) {
-            if (System.currentTimeMillis() - startTime > TIME_LIMIT_MS) {
-                throw new RuntimeException("Solver timed out (>2 minutes).");
-            }
+            timer.checkTimeLimit();
             changed = fillNakedSingles(board);
             if (isComplete(board)) {
                 return isValidCompleted(board);
@@ -49,7 +53,7 @@ public class MyAdvancedSudokuSolver {
         // 3) Backtracking
         for (int val : candidates) {
             board[row][col] = val;
-            if (solveRecursively(board, startTime)) {
+            if (solveRecursively(board)) {
                 return true;
             }
             board[row][col] = EMPTY;
