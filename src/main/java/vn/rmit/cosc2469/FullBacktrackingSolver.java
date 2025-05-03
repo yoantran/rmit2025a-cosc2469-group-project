@@ -4,11 +4,10 @@ import java.util.*;
 
 public class FullBacktrackingSolver extends RMIT_Sudoku_Solver {
     private SolverLogger logger;
-    private SolverTimer timer;
     private int stepCounter = 0;
 
     public FullBacktrackingSolver() {
-        this.timer = new SolverTimer();
+        super();
     }
 
     public void setLogger(SolverLogger logger) {
@@ -17,8 +16,6 @@ public class FullBacktrackingSolver extends RMIT_Sudoku_Solver {
 
     @Override
     public int[][] solveSudoku(int[][] board) {
-        timer.start();
-
         if (solveRecursively(board)) {
             return board;
         } else {

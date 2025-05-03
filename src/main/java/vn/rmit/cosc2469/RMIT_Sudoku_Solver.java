@@ -1,8 +1,11 @@
 package vn.rmit.cosc2469;
 
 public abstract class RMIT_Sudoku_Solver {
-    protected static final long TIME_LIMIT = 2 * 60 * 1000; // 2 minutes
-    protected long startTime;
+    protected SolverTimer timer;
+
+    public RMIT_Sudoku_Solver() {
+        this.timer = new SolverTimer();
+    }
 
     public abstract int[][] solveSudoku(int[][] board);
 
@@ -12,6 +15,8 @@ public abstract class RMIT_Sudoku_Solver {
         for (int r = 0; r < 9; r++) {
             System.arraycopy(puzzle[r], 0, board[r], 0, 9);
         }
+
+        timer.start();
 
         return solveSudoku(board);
     }

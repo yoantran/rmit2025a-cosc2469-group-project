@@ -13,16 +13,13 @@ import java.util.Set;
 public class MyAdvancedSudokuSolver extends RMIT_Sudoku_Solver {
     private static final int SIZE = 9;
     private static final int EMPTY = 0;
-    private SolverTimer timer;
 
     public MyAdvancedSudokuSolver() {
-        this.timer = new SolverTimer();
+        super();
     }
 
     @Override
     public int[][] solveSudoku(int[][] board) {
-        timer.start();
-
         if (solveRecursively(board)) {
             return board;
         } else {
