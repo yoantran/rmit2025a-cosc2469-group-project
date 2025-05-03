@@ -4,11 +4,9 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.io.IOException;
-
 public class RMIT_Sudoku_SolverTest {
     @Test
-    public void testEasy() throws IOException {
+    public void testEasy() {
         int[][] puzzle = {
                 { 0, 0, 0, 2, 6, 0, 7, 0, 1 },
                 { 6, 8, 0, 0, 7, 0, 0, 9, 0 },
@@ -28,7 +26,7 @@ public class RMIT_Sudoku_SolverTest {
     }
 
     @Test
-    public void testIntermediate() throws IOException {
+    public void testIntermediate() {
         int[][] puzzle = {
                 { 0, 2, 0, 6, 0, 8, 0, 0, 0 },
                 { 5, 8, 0, 0, 0, 9, 7, 0, 0 },
@@ -48,7 +46,7 @@ public class RMIT_Sudoku_SolverTest {
     }
 
     @Test
-    public void testDifficult() throws IOException {
+    public void testDifficult() {
         int[][] puzzle = {
                 { 0, 0, 0, 6, 0, 0, 4, 0, 0 },
                 { 7, 0, 0, 0, 0, 3, 6, 0, 0 },
@@ -68,7 +66,7 @@ public class RMIT_Sudoku_SolverTest {
     }
 
     @Test
-    public void testNotFun() throws IOException {
+    public void testNotFun() {
         int[][] puzzle = {
                 { 0, 2, 0, 0, 0, 0, 0, 0, 0 },
                 { 0, 0, 0, 6, 0, 0, 0, 0, 3 },
