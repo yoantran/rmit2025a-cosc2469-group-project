@@ -9,13 +9,13 @@ public class SudokuValidator {
 
             for (int j = 0; j < 9; j++) {
                 int r = board[i][j];
-                if (r != 0 && row[r])
+                if (r < 0 || r > 9 || row[r])
                     return false;
                 if (r != 0)
                     row[r] = true;
 
                 int c = board[j][i];
-                if (c != 0 && col[c])
+                if (c < 0 || c > 9 || col[c])
                     return false;
                 if (c != 0)
                     col[c] = true;
@@ -23,7 +23,7 @@ public class SudokuValidator {
                 int rowIndex = 3 * (i / 3) + j / 3;
                 int colIndex = 3 * (i % 3) + j % 3;
                 int b = board[rowIndex][colIndex];
-                if (b != 0 && box[b])
+                if (b < 0 || b > 9 || box[b])
                     return false;
                 if (b != 0)
                     box[b] = true;

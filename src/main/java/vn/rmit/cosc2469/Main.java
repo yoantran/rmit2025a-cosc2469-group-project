@@ -39,6 +39,15 @@ public class Main {
                 System.out.println("Original Puzzle:");
                 printBoard(puzzle);
 
+                // Validate
+                boolean originalIsValid = SudokuValidator.isValidSudoku(puzzle);
+                System.out.println("\n✅ Is original puzzle valid? " + originalIsValid);
+
+                if (!originalIsValid) {
+                    System.out.println("❌ Original puzzle is invalid, skipping...");
+                    continue;
+                }
+
                 // Start measurements here
                 System.gc();
                 long startTime = System.nanoTime();
