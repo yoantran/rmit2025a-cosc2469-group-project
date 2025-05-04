@@ -2,7 +2,7 @@ package vn.rmit.cosc2469;
 
 public class MainRunner {
     public static void main(String[] args) {
-        String filePath = "test-data/intermediate.csv"; // Change this to try another puzzle
+        String filePath = "test-data/notfun.csv"; // Change this to try another puzzle
 
         try {
             int[][] puzzle = SudokuSolverHelper.loadSudokuFromCSV(filePath);
