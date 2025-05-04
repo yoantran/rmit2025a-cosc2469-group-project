@@ -22,7 +22,7 @@ public class SolverLogger {
         File file = new File(outputFilePath);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
             for (int i = 0; i < steps.size(); i++) {
-                writer.write((i + 1) + ". " + steps.get(i));
+                writer.write(steps.get(i));
                 writer.newLine();
             }
             writer.flush();
