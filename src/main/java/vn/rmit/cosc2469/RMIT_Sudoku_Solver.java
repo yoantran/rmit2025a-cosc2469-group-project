@@ -17,13 +17,14 @@ import java.util.*;
  * </ul>
  */
 public class RMIT_Sudoku_Solver {
-    private long startTime;
     private static final long TIME_LIMIT = 2 * 60 * 1000; // 2 minutes
+    private long startTime;
     private SolverLogger logger;
     private int stepCounter = 0;
 
     /**
      * Injects a logger instance to capture solving steps.
+     *
      * @param logger the SolverLogger object
      */
     public void setLogger(SolverLogger logger) {
@@ -54,7 +55,7 @@ public class RMIT_Sudoku_Solver {
      * Recursive backtracking function that uses the MRV (Minimum Remaining Values) heuristic.
      * It selects the empty cell with the fewest candidates, then tries each candidate in turn.
      * If a candidate leads to a dead-end (i.e. no solution in recursion), it backtracks.
-     *
+     * <p>
      * Explicit logging is used to trace the decision process.
      */
     private boolean solveSudoku(int[][] board) {
@@ -87,8 +88,7 @@ public class RMIT_Sudoku_Solver {
             for (CellOptions option : allOptions) {
                 logger.logStep("- Cell (" + (option.row + 1) + "," + (option.col + 1) + ") has options: " + option.candidates);
             }
-            logger.logStep("→ Choosing cell (" + (chosen.row + 1) + "," + (chosen.col + 1) +
-                    ") because it has the fewest options: " + chosen.candidates);
+            logger.logStep("→ Choosing cell (" + (chosen.row + 1) + "," + (chosen.col + 1) + ") because it has the fewest options: " + chosen.candidates);
         }
 
         int row = chosen.row;
@@ -101,8 +101,7 @@ public class RMIT_Sudoku_Solver {
             if (logger != null) {
                 stepCounter++;
                 String reason = explainConflicts(board, row, col, num);
-                logger.logStep(stepCounter + ". Trying (" + (row + 1) + "," + (col + 1) + ") = " + num
-                        + " → " + reason + " | Options: " + candidates);
+                logger.logStep(stepCounter + ". Trying (" + (row + 1) + "," + (col + 1) + ") = " + num + " → " + reason + " | Options: " + candidates);
             }
 
             board[row][col] = num;
@@ -110,16 +109,14 @@ public class RMIT_Sudoku_Solver {
 
             // Log that candidate 'num' leads to a dead-end and backtracking is occurring.
             if (logger != null) {
-                logger.logStep("Candidate " + num + " at (" + (row + 1) + "," + (col + 1) +
-                        ") leads to dead-end. Backtracking.");
+                logger.logStep("Candidate " + num + " at (" + (row + 1) + "," + (col + 1) + ") leads to dead-end. Backtracking.");
             }
             board[row][col] = 0; // Backtrack.
         }
 
         // If none of the candidates led to a solution, log the dead-end condition at this cell.
         if (logger != null) {
-            logger.logStep("All candidates for cell (" + (row + 1) + "," + (col + 1) + ") exhausted " +
-                    candidates + ". Dead-end reached, backtracking to previous decision.");
+            logger.logStep("All candidates for cell (" + (row + 1) + "," + (col + 1) + ") exhausted " + candidates + ". Dead-end reached, backtracking to previous decision.");
         }
 
         return false;
