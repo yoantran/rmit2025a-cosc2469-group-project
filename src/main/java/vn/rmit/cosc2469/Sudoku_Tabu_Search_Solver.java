@@ -5,16 +5,18 @@ import java.util.*;
 import static vn.rmit.cosc2469.SudokuSolverHelper.isValidSudoku;
 
 /**
- * A Sudoku solver that applies local search heuristics combined with a tabu search strategy
- * to solve standard 9x9 Sudoku puzzles. The solver uses:
- * <ul>
- *   <li>Heuristic 1: Basic row/column/box elimination to fill initial values</li>
- *   <li>Tabu search: Iteratively reduces conflicts by swapping non-fixed values within rows</li>
- *   <li>Cost evaluation: Conflict calculation in columns and boxes</li>
- * </ul>
+ * Sudoku_Tabu_Search_Solver implements a local search heuristic, Tabu Search,
+ * to solve standard 9x9 Sudoku puzzles. It initializes the grid with an
+ * Alldifferent constraint within rows and iteratively reduces conflicts.
  *
- * If a solution is not found within a given iteration limit or time limit (2 minutes),
- * the best attempt is returned.
+ * <h2>Algorithm Type</h2>
+ * Local Search (Tabu Search) with Alldifferent Initial Constraint.
+ * <h2>Time and Space Complexity (Practical Considerations for n=9)</h2>
+ * <ul>
+ * <li>Worst-case time complexity: O(MAX_ITERATIONS * n^3), where n is the grid size (9), and MAX_ITERATIONS is the maximum allowed iterations.</li>
+ * <li>Best-case: O(n^2), if no or few iterations are needed</li>
+ * <li>Space complexity: O(n^2) to store the Sudoku grid and O(m) for the tabu list, where m is the maximum number of stored moves (tabu tenure).</li>
+ * </ul>
  */
 public class Sudoku_Tabu_Search_Solver {
     private static final int SIZE = 9;  // size of sudoku grid
@@ -186,9 +188,7 @@ public class Sudoku_Tabu_Search_Solver {
     private int[][] deepCopy(int[][] board) {
         int[][] copy = new int[board.length][board[0].length];
         for (int i = 0; i < board.length; i++) {
-            for (int j = 0; j < board[0].length; j++) {
-                copy[i][j] = board[i][j];
-            }
+            System.arraycopy(board[i], 0, copy[i], 0, board[0].length);
         }
         return copy;
     }
@@ -286,10 +286,6 @@ public class Sudoku_Tabu_Search_Solver {
 
             System.out.println("❌ Attempt " + attempt + " failed. Retrying...");
         }
-    }
-
-    public int getStepCount() {
-        return stepCount;
     }
 
     /**
