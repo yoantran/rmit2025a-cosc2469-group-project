@@ -107,4 +107,4 @@ $ mvn install
 
 ## Video Demonstration
 
-Video available on OneDrive: [Link]([https://youtu.be/dQw4w9WgXcQ?si=6zNhPHMCIZLkI519](https://rmiteduau-my.sharepoint.com/:v:/g/personal/s4034066_rmit_edu_vn/ER8mHjfgOnJCl7E3ulLXpOkBNKMzyUsOmEVjp4-J8q07uA?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJPbmVEcml2ZUZvckJ1c2luZXNzIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJNeUZpbGVzTGlua0NvcHkifX0&e=R4amsd)).
+Video available on OneDrive: [Link](https://rmiteduau-my.sharepoint.com/:v:/g/personal/s4034066_rmit_edu_vn/ER8mHjfgOnJCl7E3ulLXpOkBNKMzyUsOmEVjp4-J8q07uA?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJPbmVEcml2ZUZvckJ1c2luZXNzIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJNeUZpbGVzTGlua0NvcHkifX0&e=R4amsd).
